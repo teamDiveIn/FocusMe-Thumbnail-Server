@@ -6,7 +6,7 @@ export class CommonController {
   constructor(private readonly commonService: CommonService) {}
 
   @Get()
-  public async getUploadUrl(@Query('name') name: string) {
-    return this.commonService.getUploadUrl(name)
+  public async getUploadUrl(@Query('ext') ext: string) {
+    return this.commonService.getUploadUrl(ext)
   }
 }

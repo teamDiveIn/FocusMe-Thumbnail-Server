@@ -39,8 +39,19 @@ export class WebRTCService {
         mapSessionNamesTokens[sessionName].push(connection.token)
         return { token: connection.token, tokensInSession: mapSessionNamesTokens[sessionName] }
       } catch (error) {
-        console.error(error)
-        throw new BadRequestException()
+        // 이미 존재하는 줄 알고 개설하려하는데 에러나면 새로 세션을 만들어준다.
+        const session = await OV.createSession()
+        mapSessions[sessionName] = session
+        mapSessionNamesTokens[sessionName] = []
+
+        try {
+          const connection = await mySession.createConnection(connectionProperties)
+          mapSessionNamesTokens[sessionName].push(connection.token)
+          return { token: connection.token, tokensInSession: mapSessionNamesTokens[sessionName] }
+        } catch (error) {
+          console.error(error)
+          throw new BadRequestException()
+        }
       }
     } else {
       console.log('New session ' + sessionName)

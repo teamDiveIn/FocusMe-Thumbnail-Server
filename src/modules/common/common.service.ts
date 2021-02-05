@@ -1,7 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import * as AWS from 'aws-sdk'
 import { v1 as uuidv1 } from 'uuid'
-import * as path from 'path'
+import { config } from 'dotenv'
+config()
+
+console.log(process.env.AWS_ACCESS_KEY_ID, process.env.AWS_SECRET_ACCESS_KEY)
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+})
 
 const S3 = new AWS.S3({ signatureVersion: 'v4', region: 'ap-northeast-2' })
 
@@ -9,8 +16,8 @@ const S3 = new AWS.S3({ signatureVersion: 'v4', region: 'ap-northeast-2' })
 export class CommonService {
   constructor() {}
 
-  public async getUploadUrl(name: string) {
-    const fileName = uuidv1() + path.extname(name)
+  public async getUploadUrl(ext: string) {
+    const fileName = uuidv1() + '.' + ext
     const fullPath = `uploads/${fileName}`
 
     const Bucket = 'divein-object'
