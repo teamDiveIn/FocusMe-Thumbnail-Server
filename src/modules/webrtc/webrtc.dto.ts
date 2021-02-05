@@ -1,6 +1,6 @@
 export class WebRTCTokenRequest {
   session: string
-  userId: string
+  userId: number
 }
 
 export class WebRTCDeleteTokenRequest {
