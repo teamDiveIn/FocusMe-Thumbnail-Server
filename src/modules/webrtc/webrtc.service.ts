@@ -17,12 +17,8 @@ var mapSessionNamesTokens = {}
 export class WebRTCService {
   constructor() {}
 
-  public async getToken(data: WebRTCTokenRequest) {
-    const { session: sessionName, userId } = data
-
-    // TODO: 회원 토큰 인증을 해야한다.
-
-    // DB 접근해서 계정 정보 확인 후 존재하면 진행
+  public async getToken(data: WebRTCTokenRequest, userId: number) {
+    const { session: sessionName } = data
 
     const serverData = JSON.stringify({ serverData: { userId } })
 

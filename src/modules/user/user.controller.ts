@@ -1,4 +1,5 @@
 import { Controller, Get, UseGuards } from '@nestjs/common'
+import { CurrentUser, ReqUser } from '../auth/auth.decorator'
 import { AuthGuard } from '../auth/auth.guard'
 import { UserService } from './user.service'
 
@@ -8,7 +9,9 @@ export class UserController {
 
   @Get()
   @UseGuards(AuthGuard)
-  public async getHello(): Promise<string> {
+  public async getHello(
+    @ReqUser() {} : CurrentUser
+  ): Promise<string> {
     const result = await this.userService.findOne('a')
 
     return 'asd'

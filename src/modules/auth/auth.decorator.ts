@@ -1,14 +1,12 @@
-// import { createParamDecorator, ExecutionContext } from '@nestjs/common'
+import { createParamDecorator, ExecutionContext } from '@nestjs/common'
 
-// export interface CurrentUser {
-//   id: number
-//   currentUniversityId: number
-// }
+export interface CurrentUser {
+  id: number
+}
 
-// export const ReqUser = createParamDecorator<unknown, ExecutionContext, CurrentUser>(
-//   (data: unknown, context: ExecutionContext) => {
-//     const ctx = GqlExecutionContext.create(context)
-//     const { req } = ctx.getContext()
-//     return { id: req.user.id, currentUniversityId: req.universityId } as CurrentUser
-//   },
-// )
+export const ReqUser = createParamDecorator<unknown, ExecutionContext, CurrentUser>(
+  (data: unknown, context: ExecutionContext) => {
+    const req = context.switchToHttp().getRequest()
+    return { id: req?.user?.id } as CurrentUser
+  },
+)
