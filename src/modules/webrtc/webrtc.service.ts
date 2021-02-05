@@ -1,6 +1,7 @@
 import { OpenVidu, OpenViduRole } from 'openvidu-node-client'
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { WebRTCTokenRequest, WebRTCDeleteTokenRequest } from './webrtc.dto'
+import { format } from 'date-fns'
 
 const OPENVIDU_URL = 'https://open.focusonme.ga'
 const OPENVIDU_SECRET = 'MY_SECRET'
@@ -20,7 +21,9 @@ export class WebRTCService {
   public async getToken(data: WebRTCTokenRequest, userId: number) {
     const { session: sessionName } = data
 
-    const serverData = JSON.stringify({ serverData: { userId } })
+    const serverData = JSON.stringify({
+      serverData: { userId, startedAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss') },
+    })
 
     console.log('Getting a token | {sessionName}={' + sessionName + '}')
 
