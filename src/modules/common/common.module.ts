@@ -5,7 +5,8 @@ import { CommonService } from './common.service'
 
 @Module({
   imports: [TypeOrmModule.forFeature([])],
-  providers: [CommonController, CommonService],
+  providers: [CommonService],
+  controllers: [CommonController],
   exports: [CommonService],
 })
 export class CommonModule {}
