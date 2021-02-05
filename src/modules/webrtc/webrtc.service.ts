@@ -38,44 +38,38 @@ export class WebRTCService {
 
       const mySession = mapSessions[sessionName]
 
-      mySession
-        .createConnection(connectionProperties)
-        .then((connection) => {
-          mapSessionNamesTokens[sessionName].push(connection.token)
-
-          return { token: connection.token, tokensInSession: mapSessionNamesTokens[sessionName] }
-        })
-        .catch((error) => {
-          console.error(error)
-          throw new BadRequestException()
-        })
+      try {
+        const connection = await mySession.createConnection(connectionProperties)
+        mapSessionNamesTokens[sessionName].push(connection.token)
+        return { token: connection.token, tokensInSession: mapSessionNamesTokens[sessionName] }
+      } catch (error) {
+        console.error(error)
+        throw new BadRequestException()
+      }
     } else {
       console.log('New session ' + sessionName)
 
-      OV.createSession()
-        .then((session) => {
-          mapSessions[sessionName] = session
-          mapSessionNamesTokens[sessionName] = []
+      try {
+        const session = await OV.createSession()
+        mapSessions[sessionName] = session
+        mapSessionNamesTokens[sessionName] = []
 
-          session
-            .createConnection(connectionProperties)
-            .then((connection) => {
-              mapSessionNamesTokens[sessionName].push(connection.token)
+        try {
+          const connection = await session.createConnection(connectionProperties)
+          mapSessionNamesTokens[sessionName].push(connection.token)
 
-              return {
-                token: connection.token,
-                tokensInSession: mapSessionNamesTokens[sessionName],
-              }
-            })
-            .catch((error) => {
-              console.error(error)
-              throw new BadRequestException()
-            })
-        })
-        .catch((error) => {
+          return {
+            token: connection.token,
+            tokensInSession: mapSessionNamesTokens[sessionName],
+          }
+        } catch (error) {
           console.error(error)
           throw new BadRequestException()
-        })
+        }
+      } catch (error) {
+        console.error(error)
+        throw new BadRequestException()
+      }
     }
   }
 
